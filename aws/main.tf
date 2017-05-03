@@ -2,7 +2,7 @@ provider "aws" {
   region     = "us-east-1"
 }
 
-data "aws_ami" "ubuntu" {
+/*data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
@@ -17,12 +17,16 @@ data "aws_ami" "ubuntu" {
 
   owners = ["099720109477"] # Canonical
 }
-
-resource "aws_instance" "web" {
-  ami           = "${data.aws_ami.ubuntu.id}"
+*/
+resource "aws_instance" "brownbag" {
+  ami           = "ami-46134b51"
   instance_type = "t2.micro"
   key_name = "brownbag"
   tags {
     Name = "brownbag"
   }
+}
+
+output "connection info" {
+  value = "ssh -i ~/.ssh/brownbag.pem ec2-user@${aws_instance.brownbag.public_dns}"
 }
