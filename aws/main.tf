@@ -1,16 +1,14 @@
-provider "aws" {
-  region     = "us-east-1"
+provider "aws" {}
+
+resource "aws_s3_bucket" "b" {
+    bucket = "brownbag-bucket"
+    acl = "public-read"
+
+    tags {
+        Name = "Brownbag"
+        Environment = "Demo"
+    }
 }
-
-#resource "aws_s3_bucket" "b" {
-#    bucket = "brownbag-bucket"
-#    acl = "private"
-
-#    tags {
-#        Name = "Brownbag"
-#        Environment = "Demo"
-#    }
-#}
 
 # Create a new instance of the latest Ubuntu 14.04 on an
 # t2.micro node with an AWS Tag naming it "HelloWorld"
@@ -195,6 +193,26 @@ resource "aws_security_group" "brownbag_security" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+resource "aws_alb_target_group_attachment" "nginx" {
+  target_group_arn = "${aws_alb_target_group.nginx-target-grp.arn}"
+  target_id = "${aws_instance.web.id}"
+  port = 80
+}
+resource "aws_alb_target_group_attachment" "concourse" {
+  target_group_arn = "${aws_alb_target_group.brownbag-target-grp.arn}"
+  target_id = "${aws_instance.web.id}"
+  port = 8080
+}
+resource "aws_route53_record" "www" {
+   zone_id = "ZTK5H73BMWAZ0"
+   name = "joshhorecny.com"
+   type = "A"
+   alias {
+     name = "${aws_alb.main.dns_name}"
+     zone_id = "${aws_alb.main.zone_id}"
+     evaluate_target_health = true
+   }
+}
 resource "aws_instance" "web" {
     ami = "ami-46134b51"
     instance_type = "t2.micro"
@@ -225,7 +243,9 @@ resource "aws_instance" "web" {
           "sudo curl -L \"https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose",
           "sudo chmod +x /usr/local/bin/docker-compose",
           "sleep 5",
-          "docker-compose up -d"
+          "docker-compose up -d",
+          "sleep 3",
+          "docker run --name josh-nginx -p 80:80 -d nginx"
         ]
     }
     tags {
