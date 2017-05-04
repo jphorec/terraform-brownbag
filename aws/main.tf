@@ -2,31 +2,14 @@ provider "aws" {
   region     = "us-east-1"
 }
 
-/*data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-*/
-resource "aws_instance" "brownbag" {
-  ami           = "ami-46134b51"
-  instance_type = "t2.micro"
-  key_name = "brownbag"
-  tags {
-    Name = "brownbag"
-  }
+module "aws_ecs_instance" {
+  source = "modules/module-ec2"
+  ami_id =  "ami-46134b51"
+  ec2_instance_type = "t2.micro"
+  ec2_key_name = "brownbag"
+  ec2_tag = "brownbag"
 }
 
 output "connection info" {
-  value = "ssh -i ~/.ssh/brownbag.pem ec2-user@${aws_instance.brownbag.public_dns}"
+  value = "ssh -i ~/.ssh/brownbag.pem ec2-user@${module.aws_ecs_instance.public_dns}"
 }
