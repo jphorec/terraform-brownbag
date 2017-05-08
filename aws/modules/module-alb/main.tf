@@ -1,6 +1,8 @@
 variable vpc_id {}
 variable name {}
-variable subnet_ids {}
+variable subnet_ids {
+  type = "list"
+}
 
 # A security group for the ELB so it is accessible via the web
 resource "aws_security_group" "alb" {

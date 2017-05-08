@@ -6,5 +6,5 @@ connect.
 Example: ~/.ssh/terraform.pub
 DESCRIPTION
 
-default = "~/.ssh/terraform.pub"
+default = "~/.ssh/brownbag.pub"
 }
