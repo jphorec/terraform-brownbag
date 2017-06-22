@@ -11,3 +11,7 @@ resource "aws_instance" "ec2" {
 output "public_dns" {
   value = "${aws_instance.ec2.public_dns}"
 }
+
+output "key_name" {
+  value = "${aws_instance.ec2.key_name}"
+}
