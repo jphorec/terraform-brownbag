@@ -9,7 +9,7 @@ module "concourse" {
   route53_name = "joshhorecny.com"
   route53_type  = "A"
   instance_type = "t2.micro"
-  public_key_name = "brownbag"
-  public_key_path = "~/.ssh/brownbag.pem"
+  public_key_name = "JoshKey"
+  public_key_path = "~/.ssh/JoshKey.pub"
 }
 
