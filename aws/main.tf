@@ -10,6 +10,6 @@ module "concourse" {
   route53_type  = "A"
   instance_type = "t2.micro"
   public_key_name = "JoshKey"
-  public_key_path = "~/.ssh/JoshKey.pub"
+  public_key_path = "~/.ssh/JoshKey.pem"
 }
 

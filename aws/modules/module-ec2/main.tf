@@ -59,10 +59,12 @@ resource "aws_alb_target_group_attachment" "concourse" {
   target_id = "${aws_instance.web.id}"
   port = 8080
 }
+/*
 resource "aws_key_pair" "auth" {
   key_name   = "${var.public_key_name}"
   public_key = "${file(var.public_key_path)}"
 }
+*/
 
 resource "aws_instance" "web" {
     ami = "${var.ami}"
@@ -76,8 +78,9 @@ resource "aws_instance" "web" {
     subnet_id = "${var.subnet_id}"
     connection {
       user = "ec2-user"
-    }
-    key_name = "${aws_key_pair.auth.id}"
+      private_key = "${file(var.public_key_path)}"
+    } 
+    key_name = "${var.public_key_name}"
     provisioner "file" {
       source = "concourse-docker.yml"
       destination = "/home/ec2-user/docker-compose.yml"
