@@ -6,7 +6,7 @@ variable alias_zone_id {}
 variable eval_target_health { default = true }
 
 resource "aws_route53_record" "www" {
-   zone_id = "${var.route53_zone_id}"  #"ZTK5H73BMWAZ0"
+   zone_id = "${var.route53_zone_id}"  #"*********"
    name = "${var.route53_name}"      #"joshhorecny.com"
    type = "${var.route53_type}" #"A"
    alias {
